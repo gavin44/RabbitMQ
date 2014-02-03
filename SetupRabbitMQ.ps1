@@ -30,7 +30,12 @@ $connection = $createConnectionMethod.Invoke($factory, "instance,public", $null,
 Write-Host "Setting up RabbitMQ Model"
 $model = $connection.CreateModel()
 
-Write-Host "Creating Queue"
-$model.QueueDeclare("SampleQueue", $false, $false, $false, $null)
+Write-Host "Creating Exchange"
+$exchangeType = [RabbitMQ.Client.ExchangeType]::Fanout
+$model.ExchangeDeclare("Sample.Exchange", $exchangeType, $true)
+
+Write-Host "Creating Server 1 Queue"
+$model.QueueDeclare(“.Sample.Queue”, $true, $false, $false, $null)
+$model.QueueBind("Sample.Queue", "Sample.Exchange", "")
 
 Write-Host "Setup complete"

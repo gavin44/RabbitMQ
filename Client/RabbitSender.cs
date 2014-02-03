@@ -10,7 +10,7 @@ namespace Client
         private const string HostName = "localhost";
         private const string UserName = "guest";
         private const string Password = "guest";
-        private const string ExchangeName = "Sample3.Exchange";
+        private const string ExchangeName = "Sample.Exchange";
         private const bool IsDurable = true;
         
         private const string VirtualHost = "";
