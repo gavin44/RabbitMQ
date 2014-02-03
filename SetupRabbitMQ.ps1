@@ -31,6 +31,6 @@ Write-Host "Setting up RabbitMQ Model"
 $model = $connection.CreateModel()
 
 Write-Host "Creating Queue"
-$model.QueueDeclare("hello", $false, $false, $false, $null)
+$model.QueueDeclare("SampleQueue", $false, $false, $false, $null)
 
 Write-Host "Setup complete"
