@@ -1,0 +1,8 @@
+C:\Rabbit\Server\bin\Debug\Server.exe.config
+C:\Rabbit\Server\bin\Debug\Server.exe
+C:\Rabbit\Server\bin\Debug\Server.pdb
+C:\Rabbit\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+C:\Rabbit\Server\obj\Debug\Server.exe
+C:\Rabbit\Server\obj\Debug\Server.pdb
+C:\Rabbit\Server\bin\Debug\RabbitMQ.Client.dll
+C:\Rabbit\Server\bin\Debug\RabbitMQ.Client.xml

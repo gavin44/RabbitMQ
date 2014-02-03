@@ -7,35 +7,33 @@ using RabbitMQ.Client;
 namespace Client
 {
     public class Class1
-    {
-        private const string HostName = "localhost";
-        private const string UserName = "guest";
-        private const string Password = "guest";
-        private const string QueueName = "SampleQueue";
-        private const string ExchangeName = "";
-
-
+    {        
         public static void Main(
             string[] args)
         {
             Console.WriteLine("Starting RabbitMQ Message Sender");
             Console.WriteLine();
-            Console.WriteLine();
 
-            var connectionFactory = new ConnectionFactory { HostName = HostName, UserName = UserName, Password = Password };
-            var connection = connectionFactory.CreateConnection();
-            var model = connection.CreateModel();
+            var _messageCount = 0;
+            var _rabbitSender = new RabbitSender();
 
-            var properties = model.CreateBasicProperties();
-            properties.SetPersistent(false);
+            Console.WriteLine("Press enter key to send a message");
+            while (true)
+            {
+                var _key = Console.ReadKey();
+                if (_key.Key == ConsoleKey.Q)
+                    break;
 
-            //Serialize
-            byte[] messageBuffer = Encoding.Default.GetBytes("this is my message");
+                if (_key.Key == ConsoleKey.Enter)
+                {
+                    var _message = string.Format("Message: {0}", _messageCount);
+                    Console.WriteLine(string.Format("Sending - {0}", _message));
 
-            //Send message
-            model.BasicPublish(ExchangeName, QueueName, properties, messageBuffer);
+                    _rabbitSender.Send(_message);
+                    _messageCount++;
+                }
+            }
 
-            Console.WriteLine("Message sent");
             Console.ReadLine();
         }
     }
