@@ -26,15 +26,12 @@ namespace Server
         private ConnectionFactory c_connectionFactory;
         private IConnection c_connection;
         private IModel c_model;
-        private Subscription _subscription;
+        private Subscription c_subscription;
 
 
-        /// <summary>
-        /// Ctor with a key to lookup the configuration
-        /// </summary>
         public RabbitConsumer()
         {
-            DisplaySettings();
+            this.DisplaySettings();
             this.c_connectionFactory = new ConnectionFactory
             {
                 HostName = HostName,
@@ -60,17 +57,17 @@ namespace Server
             Console.WriteLine("Password: {0}", Password);
             Console.WriteLine("QueueName: {0}", QueueName);
             Console.WriteLine("VirtualHost: {0}", VirtualHost);
-            Console.WriteLine("Port: {0}", c_port);
+            Console.WriteLine("Port: {0}", this.c_port);
             Console.WriteLine("Is Durable: {0}", IsDurable);
         }
         
 
         public void Start()
         {
-            _subscription = new Subscription(this.c_model, QueueName, false);
+            this.c_subscription = new Subscription(this.c_model, QueueName, false);
 
-            var consumer = new ConsumeDelegate(Poll);
-            consumer.Invoke();
+            var _consumer = new ConsumeDelegate(Poll);
+            _consumer.Invoke();
         }
 
 
@@ -82,7 +79,7 @@ namespace Server
             while (Enabled)
             {
                 //Get next message
-                var _deliveryArgs = _subscription.Next();
+                var _deliveryArgs = this.c_subscription.Next();
                 //Deserialize message
                 var _message = Encoding.Default.GetString(_deliveryArgs.Body);
 
@@ -90,7 +87,7 @@ namespace Server
                 Console.WriteLine("Message Recieved - {0}", _message);
 
                 //Acknowledge message is processed
-                _subscription.Ack(_deliveryArgs);
+                this.c_subscription.Ack(_deliveryArgs);
             }
         }
         
