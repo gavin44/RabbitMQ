@@ -8,4 +8,4 @@ Source code
 Created a client to publish message to queue
 Created server to consume the message
 
-WIP - need to create another queue 
+Added another server to consume messages 
