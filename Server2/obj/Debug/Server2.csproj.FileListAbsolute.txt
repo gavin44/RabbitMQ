@@ -1,0 +1,8 @@
+C:\Rabbit\Server2\bin\Debug\Server2.exe.config
+C:\Rabbit\Server2\bin\Debug\Server2.exe
+C:\Rabbit\Server2\bin\Debug\Server2.pdb
+C:\Rabbit\Server2\bin\Debug\RabbitMQ.Client.dll
+C:\Rabbit\Server2\bin\Debug\RabbitMQ.Client.xml
+C:\Rabbit\Server2\obj\Debug\Server2.csprojResolveAssemblyReference.cache
+C:\Rabbit\Server2\obj\Debug\Server2.exe
+C:\Rabbit\Server2\obj\Debug\Server2.pdb

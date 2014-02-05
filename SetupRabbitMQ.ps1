@@ -35,7 +35,11 @@ $exchangeType = [RabbitMQ.Client.ExchangeType]::Fanout
 $model.ExchangeDeclare("Sample.Exchange", $exchangeType, $true)
 
 Write-Host "Creating Server 1 Queue"
-$model.QueueDeclare(“.Sample.Queue”, $true, $false, $false, $null)
-$model.QueueBind("Sample.Queue", "Sample.Exchange", "")
+$model.QueueDeclare(“Server1.Sample.Queue”, $true, $false, $false, $null)
+$model.QueueBind("Server1.Sample.Queue", "Sample.Exchange", "")
+
+Write-Host "Creating Server 2 Queue"
+$model.QueueDeclare(“Server2.Sample.Queue”, $true, $false, $false, $null)
+$model.QueueBind("Server2.Sample.Queue", "Sample.Exchange", "")
 
 Write-Host "Setup complete"

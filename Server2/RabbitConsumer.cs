@@ -2,22 +2,22 @@
 using System.Text;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using RabbitMQ.Client.MessagePatterns;
 
 
-namespace Server
+namespace Server2
 {
     public class RabbitConsumer
     {
         private const string HostName = "localhost";
         private const string UserName = "guest";
         private const string Password = "guest";
-        private const string QueueName = "Server1.Sample.Queue";
+        private const string QueueName = "Server2.Sample.Queue";
         private const bool IsDurable = true;
-        
+        //The two below settings are just to illustrate how they can be used but we are not using them in
+        //this sample as we will use the defaults
         private const string VirtualHost = "";
-        private int c_port = 0;
+        private int Port = 0;
 
         public delegate void OnReceiveMessage(string message);
 
@@ -26,15 +26,12 @@ namespace Server
         private ConnectionFactory c_connectionFactory;
         private IConnection c_connection;
         private IModel c_model;
-        private Subscription _subscription;
+        private Subscription c_subscription;
 
 
-        /// <summary>
-        /// Ctor with a key to lookup the configuration
-        /// </summary>
         public RabbitConsumer()
         {
-            DisplaySettings();
+            this.DisplaySettings();
             this.c_connectionFactory = new ConnectionFactory
             {
                 HostName = HostName,
@@ -44,8 +41,8 @@ namespace Server
 
             if (string.IsNullOrEmpty(VirtualHost) == false)
                 this.c_connectionFactory.VirtualHost = VirtualHost;
-            if (c_port > 0)
-                this.c_connectionFactory.Port = this.c_port;
+            if (Port > 0)
+                this.c_connectionFactory.Port = Port;
 
             this.c_connection = this.c_connectionFactory.CreateConnection();
             this.c_model = this.c_connection.CreateModel();
@@ -60,17 +57,17 @@ namespace Server
             Console.WriteLine("Password: {0}", Password);
             Console.WriteLine("QueueName: {0}", QueueName);
             Console.WriteLine("VirtualHost: {0}", VirtualHost);
-            Console.WriteLine("Port: {0}", c_port);
+            Console.WriteLine("Port: {0}", Port);
             Console.WriteLine("Is Durable: {0}", IsDurable);
         }
         
 
         public void Start()
         {
-            _subscription = new Subscription(this.c_model, QueueName, false);
+            this.c_subscription = new Subscription(this.c_model, QueueName, false);
 
-            var consumer = new ConsumeDelegate(Poll);
-            consumer.Invoke();
+            var _consumer = new ConsumeDelegate(Poll);
+            _consumer.Invoke();
         }
 
 
@@ -82,7 +79,7 @@ namespace Server
             while (Enabled)
             {
                 //Get next message
-                var _deliveryArgs = _subscription.Next();
+                var _deliveryArgs = this.c_subscription.Next();
                 //Deserialize message
                 var _message = Encoding.Default.GetString(_deliveryArgs.Body);
 
@@ -90,7 +87,7 @@ namespace Server
                 Console.WriteLine("Message Recieved - {0}", _message);
 
                 //Acknowledge message is processed
-                _subscription.Ack(_deliveryArgs);
+                this.c_subscription.Ack(_deliveryArgs);
             }
         }
         
