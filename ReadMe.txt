@@ -1,11 +1,10 @@
 Powershell script
 ====================
-Sets up an exchange and queue by executing the batch file
-The queue is bound to the exchange
+Sets up an exchange and two queues by executing the batch file
+The queues are bound to the exchange
 
 Source code
 ============
 Created a client to publish message to queue
-Created server to consume the message
+Created two servers to consume the messages
 
-Added another server to consume messages 
