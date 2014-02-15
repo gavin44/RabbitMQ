@@ -12,7 +12,7 @@ namespace Server3
         private const string HostName = "localhost";
         private const string UserName = "guest";
         private const string Password = "guest";
-        private const string QueueName = "Module2.Sample5.Queue3";
+        private const string QueueName = "Sample.Queue3";
         private const bool IsDurable = true;
         
         private const string VirtualHost = "";

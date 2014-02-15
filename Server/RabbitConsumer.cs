@@ -67,7 +67,7 @@ namespace Server
         {
             this.c_subscription = new Subscription(this.c_model, QueueName, false);
 
-            var _consumer = new ConsumeDelegate(Poll);
+            var _consumer = new ConsumeDelegate(this.Poll);
             _consumer.Invoke();
         }
 
