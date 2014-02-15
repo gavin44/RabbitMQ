@@ -43,7 +43,7 @@ namespace WinClient
 
         private void SetupRabbitMq()
         {
-            c_connectionFactory = new ConnectionFactory
+            this.c_connectionFactory = new ConnectionFactory
             {
                 HostName = HostName,
                 UserName = UserName,
@@ -64,37 +64,35 @@ namespace WinClient
             List<string> topics)
         {
             //Setup properties
-            var properties = c_model.CreateBasicProperties();
-            properties.SetPersistent(true);
+            var _properties = this.c_model.CreateBasicProperties();
+            _properties.SetPersistent(true);
 
             //Serialize
-            byte[] messageBuffer = Encoding.Default.GetBytes(message);
+            byte[] _messageBuffer = Encoding.Default.GetBytes(message);
 
             //Create routing key from topics
-            var routingKey = topics.Aggregate(string.Empty, (current, key) => current + (key.ToLower() + "."));
-            if (routingKey.Length > 1)
-                routingKey = routingKey.Remove(routingKey.Length - 1, 1);
+            var _routingKey = topics.Aggregate(string.Empty, (current, key) => current + (key.ToLower() + "."));
+            if (_routingKey.Length > 1)
+                _routingKey = _routingKey.Remove(_routingKey.Length - 1, 1);
 
-            Console.WriteLine("Routing key from topics: {0}", routingKey);
+            Console.WriteLine("Routing key from topics: {0}", _routingKey);
 
             //Send message
-            c_model.BasicPublish(ExchangeName, routingKey, properties, messageBuffer);
+            this.c_model.BasicPublish(ExchangeName, _routingKey, _properties, _messageBuffer);
 
-            return routingKey;
+            return _routingKey;
         }
 
-        /// <summary>
-        /// Dispose
-        /// </summary>
+        
         public void Dispose()
         {
-            if (c_connection != null)
-                c_connection.Close();
+            if (this.c_connection != null)
+                this.c_connection.Close();
             
-            if (c_model != null && c_model.IsOpen)
-                c_model.Abort();
+            if (this.c_model != null && this.c_model.IsOpen)
+                this.c_model.Abort();
 
-            c_connectionFactory = null;
+            this.c_connectionFactory = null;
 
             GC.SuppressFinalize(this);
         }

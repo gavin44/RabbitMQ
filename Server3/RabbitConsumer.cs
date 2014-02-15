@@ -6,9 +6,7 @@ using System.Collections.Generic;
 
 namespace Server3
 {
-    /// <summary>
-    /// Class to encapsulate recieving messages from RabbitMQ
-    /// </summary>
+    // Class to encapsulate recieving messages from RabbitMQ
     public class RabbitConsumer : IDisposable
     {
         private const string HostName = "localhost";
@@ -16,8 +14,7 @@ namespace Server3
         private const string Password = "guest";
         private const string QueueName = "Module2.Sample5.Queue3";
         private const bool IsDurable = true;
-        //The two below settings are just to illustrate how they can be used but we are not using them in
-        //this sample as we will use the defaults
+        
         private const string VirtualHost = "";
         private int Port = 0;
 
@@ -25,19 +22,17 @@ namespace Server3
 
         public bool Enabled { get; set; }
     
-        private ConnectionFactory _connectionFactory;
-        private IConnection _connection;
-        private IModel _model;
-        private Subscription _subscription;
+        private ConnectionFactory c_connectionFactory;
+        private IConnection c_connection;
+        private IModel c_model;
+        private Subscription c_subscription;
         
 
-        /// <summary>
-        /// Ctor with a key to lookup the configuration
-        /// </summary>
+        // Ctor with a key to lookup the configuration
         public RabbitConsumer()
         {
-            DisplaySettings();
-            _connectionFactory = new ConnectionFactory
+            this.DisplaySettings();
+            this.c_connectionFactory = new ConnectionFactory
             {
                 HostName = HostName,
                 UserName = UserName,
@@ -45,17 +40,16 @@ namespace Server3
             };
 
             if (string.IsNullOrEmpty(VirtualHost) == false)
-                _connectionFactory.VirtualHost = VirtualHost;
+                this.c_connectionFactory.VirtualHost = VirtualHost;
             if (Port > 0)
-                _connectionFactory.Port = Port;
+                this.c_connectionFactory.Port = Port;
 
-            _connection = _connectionFactory.CreateConnection();
-            _model = _connection.CreateModel();
-            _model.BasicQos(0, 1, false);
+            this.c_connection = this.c_connectionFactory.CreateConnection();
+            this.c_model = this.c_connection.CreateModel();
+            this.c_model.BasicQos(0, 1, false);
         }
-        /// <summary>
-        /// Displays the rabbit settings
-        /// </summary>
+        
+
         private void DisplaySettings()
         {
             Console.WriteLine("Host: {0}", HostName);
@@ -66,45 +60,47 @@ namespace Server3
             Console.WriteLine("Port: {0}", Port);
             Console.WriteLine("Is Durable: {0}", IsDurable);
         }
-        /// <summary>
-        /// Starts receiving a message from a queue
-        /// </summary>
+        
+
+        // Starts receiving a message from a queue
         public void Start()
         {
-            _subscription = new Subscription(_model, QueueName, false);
+            this.c_subscription = new Subscription(this.c_model, QueueName, false);
 
-            var consumer = new ConsumeDelegate(Poll);
-            consumer.Invoke();
+            var _consumer = new ConsumeDelegate(this.Poll);
+            _consumer.Invoke();
         }
+
+
         private delegate void ConsumeDelegate();
+
 
         private void Poll()
         {
             while (Enabled)
             {
                 //Get next message
-                var deliveryArgs = _subscription.Next();
+                var _deliveryArgs = this.c_subscription.Next();
                 //Deserialize message
-                var message = Encoding.Default.GetString(deliveryArgs.Body);
+                var _message = Encoding.Default.GetString(_deliveryArgs.Body);
 
                 //Handle Message
-                Console.WriteLine("Message Recieved - {0}", message);
+                Console.WriteLine("Message Recieved - {0}", _message);
 
                 //Acknowledge message is processed
-                _subscription.Ack(deliveryArgs);
+                this.c_subscription.Ack(_deliveryArgs);
             }
         }
-        /// <summary>
-        /// Dispose
-        /// </summary>
+        
+
         public void Dispose()
         {
-            if (_model != null)
-                _model.Dispose();
-            if (_connection != null)
-                _connection.Dispose();
+            if (this.c_model != null)
+                this.c_model.Dispose();
+            if (this.c_connection != null)
+                this.c_connection.Dispose();
 
-            _connectionFactory = null;
+            this.c_connectionFactory = null;
 
             GC.SuppressFinalize(this);
         }
