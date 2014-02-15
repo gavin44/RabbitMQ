@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 namespace Server2
 {
     class Program
@@ -9,10 +10,10 @@ namespace Server2
         {
             Console.WriteLine("Starting RabbitMQ queue processor");
             Console.WriteLine();
-            Console.WriteLine();
 
-            var queueProcessor = new RabbitConsumer(){Enabled = true};
-            queueProcessor.Start();
+            var _queueProcessor = new RabbitConsumer(){Enabled = true};
+            _queueProcessor.Start();
+
             Console.ReadLine();
         }
     }
