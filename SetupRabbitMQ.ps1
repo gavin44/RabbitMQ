@@ -4,8 +4,6 @@ $RabbitDllPath = Resolve-Path $RabbitDllPath
 Write-Host "Rabbit DLL Path: " 
 Write-Host $RabbitDllPath -foregroundcolor green
 
-set-ExecutionPolicy Unrestricted
-
 $absoluteRabbitDllPath = Resolve-Path $RabbitDllPath
 
 Write-Host "Absolute Rabbit DLL Path: " 
@@ -33,20 +31,20 @@ $model = $connection.CreateModel()
 
 Write-Host "Creating Exchange" -foregroundcolor green
 $exchangeType = [RabbitMQ.Client.ExchangeType]::Topic
-$model.ExchangeDeclare("Module2.Sample5.Exchange", $exchangeType, $true)
+$model.ExchangeDeclare("Sample.Exchange", $exchangeType, $true)
 
 Write-Host "Creating Server 1 Queue" -foregroundcolor green
-$model.QueueDeclare(“Module2.Sample5.Queue1”, $true, $false, $false, $null)
-$model.QueueBind("Module2.Sample5.Queue1", "Module2.Sample5.Exchange", "*.high.*")
+$model.QueueDeclare(“Sample.Queue1”, $true, $false, $false, $null)
+$model.QueueBind("Sample.Queue1", " Sample.Exchange", "*.high.*")
 
 Write-Host "Creating Server 2 Queue" -foregroundcolor green
-$model.QueueDeclare(“Module2.Sample5.Queue2”, $true, $false, $false, $null)
-$model.QueueBind("Module2.Sample5.Queue2", "Module2.Sample5.Exchange", "*.*.cupboard")
+$model.QueueDeclare(“Sample.Queue2”, $true, $false, $false, $null)
+$model.QueueBind("Sample.Queue2", "Sample.Exchange", "*.*.cupboard")
 
 Write-Host "Creating Server 3 Queue" -foregroundcolor green
-$model.QueueDeclare(“Module2.Sample5.Queue3”, $true, $false, $false, $null)
-$model.QueueBind("Module2.Sample5.Queue3", "Module2.Sample5.Exchange", "*.medium.*")
-$model.QueueBind("Module2.Sample5.Queue3", "Module2.Sample5.Exchange", "corporate.#")
+$model.QueueDeclare(“Sample.Queue3”, $true, $false, $false, $null)
+$model.QueueBind("Sample.Queue3", "Sample.Exchange", "*.medium.*")
+$model.QueueBind("Sample.Queue3", "Sample.Exchange", "corporate.#")
 
 
 Write-Host "Setup complete"
