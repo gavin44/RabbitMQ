@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using RabbitMQ.Client;
 
+
 namespace WinClient
 {
     public class RabbitSender : IDisposable
@@ -13,23 +14,20 @@ namespace WinClient
         private const string Password = "guest";
         private const string ExchangeName = "Module2.Sample5.Exchange";
         private const bool IsDurable = true;
-        //The two below settings are just to illustrate how they can be used but we are not using them in
-        //this sample as we will use the defaults
         private const string VirtualHost = "";
         private int Port = 0;
 
-        private ConnectionFactory _connectionFactory;
-        private IConnection _connection;
-        private IModel _model;
+        private ConnectionFactory c_connectionFactory;
+        private IConnection c_connection;
+        private IModel c_model;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
+        
         public RabbitSender()
         {
-            DisplaySettings();
-            SetupRabbitMq();
+            this.DisplaySettings();
+            this.SetupRabbitMq();
         }
+
 
         private void DisplaySettings()
         {
@@ -41,12 +39,11 @@ namespace WinClient
             Console.WriteLine("Port: {0}", Port);
             Console.WriteLine("Is Durable: {0}", IsDurable);
         }
-        /// <summary>
-        /// Sets up the connections for rabbitMQ
-        /// </summary>
+        
+
         private void SetupRabbitMq()
         {
-            _connectionFactory = new ConnectionFactory
+            c_connectionFactory = new ConnectionFactory
             {
                 HostName = HostName,
                 UserName = UserName,
@@ -54,18 +51,20 @@ namespace WinClient
             };
 
             if (string.IsNullOrEmpty(VirtualHost) == false)
-                _connectionFactory.VirtualHost = VirtualHost;
+                this.c_connectionFactory.VirtualHost = VirtualHost;
             if (Port > 0)
-                _connectionFactory.Port = Port;
+                this.c_connectionFactory.Port = Port;
 
-            _connection = _connectionFactory.CreateConnection();
-            _model = _connection.CreateModel();
+            this.c_connection = c_connectionFactory.CreateConnection();
+            this.c_model = this.c_connection.CreateModel();
         }
 
-        public string Send(string message, List<string> topics)
+        public string Send(
+            string message, 
+            List<string> topics)
         {
             //Setup properties
-            var properties = _model.CreateBasicProperties();
+            var properties = c_model.CreateBasicProperties();
             properties.SetPersistent(true);
 
             //Serialize
@@ -79,7 +78,7 @@ namespace WinClient
             Console.WriteLine("Routing key from topics: {0}", routingKey);
 
             //Send message
-            _model.BasicPublish(ExchangeName, routingKey, properties, messageBuffer);
+            c_model.BasicPublish(ExchangeName, routingKey, properties, messageBuffer);
 
             return routingKey;
         }
@@ -89,13 +88,13 @@ namespace WinClient
         /// </summary>
         public void Dispose()
         {
-            if (_connection != null)
-                _connection.Close();
+            if (c_connection != null)
+                c_connection.Close();
             
-            if (_model != null && _model.IsOpen)
-                _model.Abort();
+            if (c_model != null && c_model.IsOpen)
+                c_model.Abort();
 
-            _connectionFactory = null;
+            c_connectionFactory = null;
 
             GC.SuppressFinalize(this);
         }

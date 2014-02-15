@@ -9,3 +9,11 @@ C:\VSTFS\Module 2\After\Sample.5.Topic\Server2\obj\Debug\Server2.csprojResolveAs
 C:\RabbitExerciseFilesPart2\1-rabbitmq-dotnet-2-m1-exercise-files\Sample.2.Topic\Server2\bin\Debug\Server2.exe.config
 C:\RabbitExerciseFilesPart2\1-rabbitmq-dotnet-2-m1-exercise-files\Sample.2.Topic\Server2\obj\Debug\Server2.exe
 C:\RabbitExerciseFilesPart2\1-rabbitmq-dotnet-2-m1-exercise-files\Sample.2.Topic\Server2\obj\Debug\Server2.pdb
+C:\Rabbit\Server2\bin\Debug\Server2.exe.config
+C:\Rabbit\Server2\bin\Debug\Server2.exe
+C:\Rabbit\Server2\bin\Debug\Server2.pdb
+C:\Rabbit\Server2\bin\Debug\RabbitMQ.Client.dll
+C:\Rabbit\Server2\bin\Debug\RabbitMQ.Client.xml
+C:\Rabbit\Server2\obj\Debug\Server2.csprojResolveAssemblyReference.cache
+C:\Rabbit\Server2\obj\Debug\Server2.exe
+C:\Rabbit\Server2\obj\Debug\Server2.pdb
