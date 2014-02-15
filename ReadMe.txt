@@ -8,3 +8,5 @@ Source code
 Created a client to publish message to queue
 Created two servers to consume the messages
 
+Going to create a windows application to use for serialisation
+
