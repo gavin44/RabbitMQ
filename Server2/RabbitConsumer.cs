@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Text;
-using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.MessagePatterns;
-
+using System.Collections.Generic;
 
 namespace Server2
 {
-    public class RabbitConsumer
+    /// <summary>
+    /// Class to encapsulate recieving messages from RabbitMQ
+    /// </summary>
+    public class RabbitConsumer : IDisposable
     {
         private const string HostName = "localhost";
         private const string UserName = "guest";
         private const string Password = "guest";
-        private const string QueueName = "Server2.Sample.Queue";
+        private const string QueueName = "Module2.Sample5.Queue2";
         private const bool IsDurable = true;
         //The two below settings are just to illustrate how they can be used but we are not using them in
         //this sample as we will use the defaults
@@ -22,17 +24,20 @@ namespace Server2
         public delegate void OnReceiveMessage(string message);
 
         public bool Enabled { get; set; }
+    
+        private ConnectionFactory _connectionFactory;
+        private IConnection _connection;
+        private IModel _model;
+        private Subscription _subscription;
+        
 
-        private ConnectionFactory c_connectionFactory;
-        private IConnection c_connection;
-        private IModel c_model;
-        private Subscription c_subscription;
-
-
+        /// <summary>
+        /// Ctor with a key to lookup the configuration
+        /// </summary>
         public RabbitConsumer()
         {
-            this.DisplaySettings();
-            this.c_connectionFactory = new ConnectionFactory
+            DisplaySettings();
+            _connectionFactory = new ConnectionFactory
             {
                 HostName = HostName,
                 UserName = UserName,
@@ -40,16 +45,17 @@ namespace Server2
             };
 
             if (string.IsNullOrEmpty(VirtualHost) == false)
-                this.c_connectionFactory.VirtualHost = VirtualHost;
+                _connectionFactory.VirtualHost = VirtualHost;
             if (Port > 0)
-                this.c_connectionFactory.Port = Port;
+                _connectionFactory.Port = Port;
 
-            this.c_connection = this.c_connectionFactory.CreateConnection();
-            this.c_model = this.c_connection.CreateModel();
-            this.c_model.BasicQos(0, 1, false);
+            _connection = _connectionFactory.CreateConnection();
+            _model = _connection.CreateModel();
+            _model.BasicQos(0, 1, false);
         }
-        
-
+        /// <summary>
+        /// Displays the rabbit settings
+        /// </summary>
         private void DisplaySettings()
         {
             Console.WriteLine("Host: {0}", HostName);
@@ -60,46 +66,45 @@ namespace Server2
             Console.WriteLine("Port: {0}", Port);
             Console.WriteLine("Is Durable: {0}", IsDurable);
         }
-        
-
+        /// <summary>
+        /// Starts receiving a message from a queue
+        /// </summary>
         public void Start()
         {
-            this.c_subscription = new Subscription(this.c_model, QueueName, false);
+            _subscription = new Subscription(_model, QueueName, false);
 
-            var _consumer = new ConsumeDelegate(Poll);
-            _consumer.Invoke();
+            var consumer = new ConsumeDelegate(Poll);
+            consumer.Invoke();
         }
-
-
         private delegate void ConsumeDelegate();
-
 
         private void Poll()
         {
             while (Enabled)
             {
                 //Get next message
-                var _deliveryArgs = this.c_subscription.Next();
+                var deliveryArgs = _subscription.Next();
                 //Deserialize message
-                var _message = Encoding.Default.GetString(_deliveryArgs.Body);
+                var message = Encoding.Default.GetString(deliveryArgs.Body);
 
                 //Handle Message
-                Console.WriteLine("Message Recieved - {0}", _message);
+                Console.WriteLine("Message Recieved - {0}", message);
 
                 //Acknowledge message is processed
-                this.c_subscription.Ack(_deliveryArgs);
+                _subscription.Ack(deliveryArgs);
             }
         }
-        
-
+        /// <summary>
+        /// Dispose
+        /// </summary>
         public void Dispose()
         {
-            if (this.c_model != null)
-                this.c_model.Dispose();
-            if (this.c_connection != null)
-                this.c_connection.Dispose();
+            if (_model != null)
+                _model.Dispose();
+            if (_connection != null)
+                _connection.Dispose();
 
-            this.c_connectionFactory = null;
+            _connectionFactory = null;
 
             GC.SuppressFinalize(this);
         }
