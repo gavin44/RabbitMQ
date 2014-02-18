@@ -1,0 +1,4 @@
+RabbitMQ
+========
+
+Serialisation with RabbitMQ
